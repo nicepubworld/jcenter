@@ -57,7 +57,7 @@ void jprint_init()
 			int parseData = 0;//0为属性字段，1为数据字段
 			int valIndex = 0;
 			
-			printf("jimtest get buff:%s",buffOri);
+			//printf("jimtest get buff:%s",buffOri);
 
             memset(buffName,sizeof(buffName),0);
             memset(buffData,sizeof(buffData),0);
@@ -81,8 +81,8 @@ void jprint_init()
 					}				
 				}
 			}
-			printf("jimtest get no comment name:%s\n",buffName);
-			printf("jimtest get no comment data:%s\n",buffData);
+			//printf("jimtest get no comment name:%s\n",buffName);
+			//printf("jimtest get no comment data:%s\n",buffData);
 			
             if (1==parseData){
                 for (i=0;i<MOD_NUM;i++){
@@ -109,7 +109,7 @@ void jprint_init()
 		fclose(fp);
     }
 
-    jprint_print_conf();
+    //jprint_print_conf();
 }
 
 void jprint(MOD_JPRINT_T mod,MOD_DEBUG_LVL_T lvl,const char* format,...)
