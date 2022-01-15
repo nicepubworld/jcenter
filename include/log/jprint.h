@@ -63,8 +63,9 @@ typedef enum MOD_JPRINT_COLOR_E{
 
 
 typedef enum MOD_JPRINT_E{
-    MOD_JPRINT_INIT,
+    MOD_JPRINT_DEBUG_LEVEL,
     MOD_JPRINT_MAIN,
+    MOD_LOG_FILE,
     MOD_NUM
 }MOD_JPRINT_T;
 
@@ -75,6 +76,12 @@ typedef enum MOD_DEBUG_LVL_E{
     MOD_DEBUG_ERR,
     MOD_DEBUG_FATAL,
 }MOD_DEBUG_LVL_T;
+
+typedef struct{
+    const char* desc;
+    int val;
+    MOD_JPRINT_T mod;
+}MOD_JPRINT_CONF_T;
 
 
 void jprint_init();

@@ -29,7 +29,7 @@ int run_master()
 
     while (1)//main loop
     {
-        printf("hello!\r\n");
+        jprint(MOD_JPRINT_MAIN,MOD_DEBUG_TRACE,"hello!\r\n");
         sleep(1);
     }
 }
