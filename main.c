@@ -14,9 +14,9 @@
 
 void signalHandler( int signum )
 {
-    //jprint(MOD_JPRINT_MAIN,MOD_DEBUG_WARN,"sig INT signalHandler recv!\r\n");
+    jprint(MOD_JPRINT_MAIN,MOD_DEBUG_WARN,"SIGUSR1 signalHandler recv!\r\n");
 
-    //jprint_init();
+    jprint_init();
    //exit(0);  
 }
 
@@ -29,7 +29,8 @@ int run_master()
 
     while (1)//main loop
     {
-        jprint(MOD_JPRINT_MAIN,MOD_DEBUG_TRACE,"hello!\r\n");
+        jprint(MOD_JPRINT_MAIN,MOD_DEBUG_TRACE,"hello main!\r\n");
+        jprint(MOD_LOG_FILE,MOD_DEBUG_TRACE,"hello logfile!\r\n");
         sleep(1);
     }
 }
@@ -65,7 +66,7 @@ int main(int argc,char* argv[])
     }
 #endif
     // son
-    jprint(MOD_JPRINT_MAIN,MOD_DEBUG_INFO,"son(daemon) process running.!\r\n");
+    printf("son(daemon) process running.!\r\n");
 
     if (run_master() != 0) {
         jprint(MOD_JPRINT_MAIN,MOD_DEBUG_FATAL,"daemon run master\r\n");
