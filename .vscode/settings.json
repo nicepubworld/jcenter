@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "jprint.h": "c",
+        "modconfig.h": "c"
+    }
+}

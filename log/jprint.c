@@ -4,10 +4,9 @@
 #include "jprint.h"
 #include <time.h>
 #include <sys/time.h>
-#include <string.h>
-#include <stdlib.h>
 
-MOD_JPRINT_CONF_T g_jprint_conf[MOD_NUM];
+
+static MOD_JPRINT_CONF_T g_jprint_conf[MOD_NUM];
 static FILE* g_debuglog_fp;
 
 void jprint_init_conf()
@@ -28,6 +27,21 @@ void jprint_init_conf()
 
 }
 
+MOD_JPRINT_CONF_T* get_g_jprint_conf()
+{
+    return (MOD_JPRINT_CONF_T*)g_jprint_conf;
+}
+
+FILE* get_g_debuglog_fp()
+{
+    return g_debuglog_fp;
+}
+
+void set_g_debuglog_fp(FILE* fp)
+{
+    g_debuglog_fp = fp;
+}
+
 void jprint_print_conf()
 {
     int i;
@@ -36,80 +50,6 @@ void jprint_print_conf()
         if (g_jprint_conf[i].desc)
             printf("conf %s = %d\n",g_jprint_conf[i].desc,g_jprint_conf->val);
     }
-}
-
-void jprint_init()
-{
-	char buffOri[2048]={0};
-	char buffName[2048]={0};
-	char buffData[2048]={0};	
-	char* endp = NULL;
-    int i;
-	
-    jprint_init_conf();
-
-	FILE* fp = fopen("/usr/jcenter/jconfig.conf","r");
-	
-    if (NULL != fp){
-        while (fgets(buffOri,sizeof(buffOri),fp)>0){
-			int buflen = strlen(buffOri);
-			int index = 0;
-			int parseData = 0;//0为属性字段，1为数据字段
-			int valIndex = 0;
-			
-			//printf("jimtest get buff:%s",buffOri);
-
-            memset(buffName,sizeof(buffName),0);
-            memset(buffData,sizeof(buffData),0);
-
-			for (index=0;index<buflen;index++){
-				if ('#' == buffOri[index])
-					break;
-				if ('=' == buffOri[index]){
-					parseData = 1;
-					valIndex = 0;
-					continue;
-				}
-				if (' ' != buffOri[index] && '\n' != buffOri[index]){
-					if (0==parseData){
-						buffName[valIndex] = buffOri[index];
-						valIndex++;
-					}
-					else{
-						buffData[valIndex] = buffOri[index];
-						valIndex++;
-					}				
-				}
-			}
-			//printf("jimtest get no comment name:%s\n",buffName);
-			//printf("jimtest get no comment data:%s\n",buffData);
-			
-            if (1==parseData){
-                for (i=0;i<MOD_NUM;i++){
-                    if (strcmp(g_jprint_conf[i].desc,buffName) == 0){
-                        g_jprint_conf[i].val = atoi(buffData);
-                    }
-                }
-
-                if (strcmp("logpath",buffName) == 0){
-                    if (NULL !=g_debuglog_fp)
-                        fclose(g_debuglog_fp);
-                    g_debuglog_fp = fopen(buffData,"a+");
-
-                    if (NULL == g_debuglog_fp){
-                        printf("cant open log file:%s\n",buffData);
-                    }
-                }
-            }
-
-			memset(buffData,0,sizeof(buffData));
-			memset(buffName,0,sizeof(buffName));
-        }
-
-		fclose(fp);
-    }
-
-    //jprint_print_conf();
 }
 
 void jprint(MOD_JPRINT_T mod,MOD_DEBUG_LVL_T lvl,const char* format,...)
@@ -163,15 +103,18 @@ void jprint(MOD_JPRINT_T mod,MOD_DEBUG_LVL_T lvl,const char* format,...)
 
     va_start(args, format);
     vprintf(format, args);
+    va_end(args);
 
     if (NULL != g_debuglog_fp && 1==g_jprint_conf[MOD_LOG_FILE].val)
     {
+        va_start(args, format);
         slen+=vsnprintf(buf+slen,sizeof(buf)-slen,format,args);
+        va_end(args);
+        
         fprintf(g_debuglog_fp,"%s",buf);
         fflush(g_debuglog_fp);
     }
 
-    va_end(args);
     
     printf(JPRINT_NONE);
 }

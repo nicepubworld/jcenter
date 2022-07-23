@@ -1,6 +1,8 @@
 #ifndef __HEADER_JPRINT_H__
 #define __HEADER_JPRINT_H__
 
+#include <stdio.h>
+
 void Assert(char* filename, unsigned int lineno);
 
 #ifdef DEBUG_VERSION
@@ -83,10 +85,13 @@ typedef struct{
     MOD_JPRINT_T mod;
 }MOD_JPRINT_CONF_T;
 
-
 void jprint_init();
 void jprint(MOD_JPRINT_T mod,MOD_DEBUG_LVL_T lvl,const char* format,...);
 void jprintc(MOD_JPRINT_T mod,MOD_DEBUG_LVL_T lvl,MOD_JPRINT_COLOR_T color,const char* format,...);
 void jprint_hex(MOD_JPRINT_T mod,MOD_DEBUG_LVL_T lvl,const unsigned char* buff,int len);
+void jprint_init_conf();
+FILE* get_g_debuglog_fp();
+void set_g_debuglog_fp(FILE* fp);
+MOD_JPRINT_CONF_T* get_g_jprint_conf();
 
 #endif
